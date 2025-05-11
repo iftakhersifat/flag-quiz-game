@@ -14,6 +14,11 @@ const [message, setMessage] = useState("");
 //  time set
 const [timeLeft, setTimeLeft] = useState(10);
 
+
+//  sound setup
+const correctSound = new Audio('/assets/sounds/ding-sound-effect_2.mp3');
+const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
+
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then(res => res.json())
@@ -48,7 +53,7 @@ useEffect(() => {
   }
 
   if (timeLeft === 0 && !selected) {
-    setSelected({}); // টাইম শেষ হলে উত্তর বেছে নেওয়া হয়নি
+    setSelected({}); // time
     setWrongCount((prev) => prev + 1);
   }
 }, [timeLeft, selected]);
@@ -64,10 +69,12 @@ useEffect(() => {
       if (newScore > highestScore) {
         setHighestScore(newScore);
       }
+      correctSound.play(); // sound 
       return newScore;
     });
   } else {
     setWrongCount((prev) => prev + 1);
+    wrongSound.play();
   }
 };
 
@@ -148,13 +155,7 @@ useEffect(() => {
 )}
 
       <div className="flex justify-center gap-4 mt-4">
-  <button
-    className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
-    onClick={generateQuestion}
-  >
-    Next
-  </button>
-
+        {/* reset button */}
   <button
   className="border px-5 py-2 rounded-xl bg-red-500 text-white"
   onClick={() => {
@@ -175,6 +176,16 @@ useEffect(() => {
 >
   Reset
 </button>
+
+
+        {/* next button */}
+  <button
+    className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
+    onClick={generateQuestion}
+  >
+    Next
+  </button>
+
 </div>
 
 
