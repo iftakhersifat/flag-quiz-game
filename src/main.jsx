@@ -8,6 +8,7 @@ import {
 } from "react-router";
 import Root from './Components/Root.jsx';
 import Home from './Components/Home.jsx';
+import NotFound from './Components/NotFound.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
@@ -16,6 +17,10 @@ const router = createBrowserRouter([
       {index: true, Component: Home},
     ]
   },
+  {
+    path: "*",
+    Component: NotFound
+  }
 ]);
 
 createRoot(document.getElementById('root')).render(
