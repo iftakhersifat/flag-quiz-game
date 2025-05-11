@@ -16,6 +16,10 @@ const FlagQuizGame = () => {
   const [history, setHistory] = useState([]);
   const [username, setUsername] = useState("");
   const [leaderboard, setLeaderboard] = useState([]);
+  const [isMultiplayer, setIsMultiplayer] = useState(false);
+  const [turn, setTurn] = useState(1);
+  const [player1Score, setPlayer1Score] = useState(0);
+  const [player2Score, setPlayer2Score] = useState(0);
 
   const correctSound = new Audio('/assets/sounds/ding-sound-effect_2.mp3');
   const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
@@ -85,16 +89,36 @@ const FlagQuizGame = () => {
       isCorrect
     }]);
 
-    if (isCorrect) {
-      correctSound.play();
-      setCorrectCount(prev => {
-        const newScore = prev + 1;
-        if (newScore > highestScore) setHighestScore(newScore);
-        return newScore;
-      });
+    if (isMultiplayer) {
+      if (turn === 1) {
+        if (isCorrect) {
+          correctSound.play();
+          setPlayer1Score(prev => prev + 1);
+        } else {
+          wrongSound.play();
+        }
+        setTurn(2);
+      } else {
+        if (isCorrect) {
+          correctSound.play();
+          setPlayer2Score(prev => prev + 1);
+        } else {
+          wrongSound.play();
+        }
+        setTurn(1);
+      }
     } else {
-      wrongSound.play();
-      setWrongCount(prev => prev + 1);
+      if (isCorrect) {
+        correctSound.play();
+        setCorrectCount(prev => {
+          const newScore = prev + 1;
+          if (newScore > highestScore) setHighestScore(newScore);
+          return newScore;
+        });
+      } else {
+        wrongSound.play();
+        setWrongCount(prev => prev + 1);
+      }
     }
   };
 
@@ -127,6 +151,9 @@ const FlagQuizGame = () => {
     setIsGameEnded(false);
     setIsGameStarted(false);
     setMessage("");
+    setPlayer1Score(0);
+    setPlayer2Score(0);
+    setTurn(1);
   };
 
   return (
@@ -135,6 +162,12 @@ const FlagQuizGame = () => {
         <div>
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Welcome to the Flag Quiz Game!</h1>
           <p className="mb-6">Test your knowledge of world flags. Click start to begin.</p>
+
+          <div className="mb-4">
+            <label className="mr-2 font-semibold">Multiplayer Mode:</label>
+            <input type="checkbox" checked={isMultiplayer} onChange={(e) => setIsMultiplayer(e.target.checked)} />
+          </div>
+
           <div className="mb-6">
             <label className="font-medium mr-2">🌍 Select Any Region (Optional):</label>
             <select className="border rounded px-3 py-1" value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
@@ -153,13 +186,13 @@ const FlagQuizGame = () => {
       {isGameStarted && !isGameEnded && (
         <>
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Choose the Correct Flag</h1>
+          {isMultiplayer && <p className="mb-4">👤 Player 1: {player1Score} | 👤 Player 2: {player2Score} | Now Playing: <span className="font-bold">Player {turn}</span></p>}
           <p className="mb-6">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
+
           <div className="text-xl font-bold text-blue-500 mb-4">⏱️ Time Left: {timeLeft} seconds</div>
           <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mb-6">
             <div className={`h-full transition-all duration-500 ${timeLeft <= 3 ? "bg-red-500" : "bg-amber-500"}`} style={{ width: `${(timeLeft / 10) * 100}%` }}></div>
           </div>
-
-          {correctCount === 10 && <div className="text-green-500 font-semibold mb-4">🎉 Congratulations! You got 10 correct! Carry On</div>}
 
           {question && (
             <>
@@ -199,6 +232,13 @@ const FlagQuizGame = () => {
       {isGameEnded && (
         <div>
           <h2 className="text-2xl font-bold mb-4">📋 Review Your Answers</h2>
+          {isMultiplayer && (
+            <div className="mb-4">
+              <p>👤 Player 1 Score: {player1Score}</p>
+              <p>👤 Player 2 Score: {player2Score}</p>
+              <p>🏆 Winner: {player1Score === player2Score ? "It's a Tie!" : player1Score > player2Score ? "Player 1" : "Player 2"}</p>
+            </div>
+          )}
           <ul className="space-y-4">
             {history.map((item, index) => (
               <li key={index} className="border p-4 rounded-xl shadow bg-white text-left">
