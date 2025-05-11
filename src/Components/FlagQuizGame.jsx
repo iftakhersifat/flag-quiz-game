@@ -14,8 +14,10 @@ const FlagQuizGame = () => {
 
 
   const [selectedRegion, setSelectedRegion] = useState("");
-
+// for voice
   const [isTTSOn, setIsTTSOn] = useState(true);
+//   history
+const [history, setHistory] = useState([]);
 
 //   voice add
   useEffect(() => {
@@ -76,20 +78,37 @@ const FlagQuizGame = () => {
     }
   }, [timeLeft, selected, isGameStarted, isGameEnded]);
 
-  const handleAnswer = (country) => {
-    setSelected(country);
-    if (country.cca3 === question.correct.cca3) {
-      setCorrectCount(prev => {
-        const newScore = prev + 1;
-        if (newScore > highestScore) setHighestScore(newScore);
-        correctSound.play();
-        return newScore;
-      });
-    } else {
-      setWrongCount(prev => prev + 1);
-      wrongSound.play();
+//   handel answer
+const handleAnswer = (country) => {
+  setSelected(country);
+
+  const isCorrect = country.cca3 === question.correct.cca3;
+
+  // Save to history
+  setHistory(prev => [
+    ...prev,
+    {
+      flag: question.correct.flags.png,
+      correctAnswer: question.correct.name.common,
+      selectedAnswer: country.name.common,
+      isCorrect,
     }
-  };
+  ]);
+
+  if (isCorrect) {
+    // sound + score
+    correctSound.play();
+    setCorrectCount(prev => {
+      const newScore = prev + 1;
+      if (newScore > highestScore) setHighestScore(newScore);
+      return newScore;
+    });
+  } else {
+    wrongSound.play();
+    setWrongCount(prev => prev + 1);
+  }
+};
+
 
   const handleGameEnd = () => {
     setIsGameEnded(true);
@@ -235,22 +254,42 @@ const FlagQuizGame = () => {
 
       {/* End Screen */}
       {isGameEnded && (
-        <div>
-          <h1 className="text-3xl font-bold text-green-500 mb-6">🎯 Game Over!</h1>
-          <p className="mb-4">✅ Correct Answers: {correctCount}</p>
-          <p className="mb-4">❌ Wrong Answers: {wrongCount}</p>
-          <p className="mb-4">🏆 Highest Score: {highestScore}</p>
-          {message && (
-            <div className="text-blue-500 font-semibold mb-4">{message}</div>
-          )}
-          <button
-            className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
-            onClick={handleGameReset}
-          >
-            Play Again
-          </button>
-        </div>
-      )}
+  <div>
+    <h2 className="text-2xl font-bold mb-4">📋 Review Your Answers</h2>
+    <ul className="space-y-4">
+      {history.map((item, index) => (
+        <li key={index} className="border p-4 rounded-xl shadow bg-white text-left">
+          <div className="flex items-center gap-4">
+            <img src={item.flag} alt="Flag" className="w-16 h-10 object-contain" />
+            <div>
+              <p className="font-semibold">Correct: {item.correctAnswer}</p>
+              <p
+                className={`${
+                  item.isCorrect ? "text-green-600" : "text-red-500"
+                }`}
+              >
+                Your Answer: {item.selectedAnswer}
+              </p>
+            </div>
+          </div>
+        </li>
+      ))}
+    </ul>
+    <button
+      onClick={() => {
+        setHistory([]);
+        setIsGameEnded(false);
+        setIsGameStarted(false);
+        setCorrectCount(0);
+        setWrongCount(0);
+      }}
+      className="mt-6 px-5 py-2 bg-amber-500 text-white rounded-xl"
+    >
+      🔁 Play Again
+    </button>
+  </div>
+)}
+
     </div>
   );
 };
