@@ -91,7 +91,7 @@ useEffect(() => {
         </div>
 
 
-        
+
           <div className="mb-6">
         <img
           src={question.correct.flags.png}
@@ -102,12 +102,31 @@ useEffect(() => {
 
           <div className="grid grid-cols-2 gap-4 mb-6">
             {question.options.map((country) => (
-              <button
-                key={country.cca3}
-                onClick={() => handleAnswer(country)}
-                disabled={!!selected}
-                className={`border-1 border-amber-200 rounded-2xl  py-2 px-4 ${
-                  selected ? country.cca3 === question.correct.cca3 ? "bg-green-500 text-white rounded-2xl" : country.cca3 === selected.cca3 ? "bg-red-200" : "bg-gray-200" : "bg-white" }`} >{country.name.common} </button> ))}
+            //   <button
+            //     key={country.cca3}
+            //     onClick={() => handleAnswer(country)}
+            //     disabled={!!selected}
+            //     className={`border-1 border-amber-200 rounded-2xl  py-2 px-4 ${
+            //       selected ? country.cca3 === question.correct.cca3 ? "bg-green-500 text-white rounded-2xl" : country.cca3 === selected.cca3 ? "bg-red-200" : "bg-gray-200" : "bg-white" }`} >{country.name.common} </button>
+            <button
+            key={country.cca3}
+            onClick={() => handleAnswer(country)}
+            disabled={!!selected}
+            className={`border-1 border-amber-200 rounded-2xl py-2 px-4 transition-all duration-300 ${
+              selected
+                ? country.cca3 === question.correct.cca3
+                  ? "bg-green-500 text-white animate__animated animate__bounce"
+                  : country.cca3 === selected.cca3
+                  ? "bg-red-200"
+                  : "bg-gray-200"
+                : "bg-white"
+            }`}
+            >
+            {country.name.common}
+            </button>
+
+            
+            ))}
           </div>
 
           {selected && (
