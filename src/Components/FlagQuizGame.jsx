@@ -12,6 +12,9 @@ const FlagQuizGame = () => {
   const [message, setMessage] = useState("");
   const [timeLeft, setTimeLeft] = useState(10);
 
+
+  const [selectedRegion, setSelectedRegion] = useState("");
+
   const correctSound = new Audio('/assets/sounds/ding-sound-effect_2.mp3');
   const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
 
@@ -25,13 +28,21 @@ const FlagQuizGame = () => {
   }, []);
 
   const generateQuestion = () => {
-    const shuffled = [...countries].sort(() => 0.5 - Math.random());
-    const options = shuffled.slice(0, 4);
-    const correct = options[Math.floor(Math.random() * options.length)];
-    setQuestion({ options, correct });
-    setSelected(null);
-    setTimeLeft(10);
-  };
+  let filtered = countries;
+
+  if (selectedRegion) {
+    filtered = countries.filter((c) => c.region === selectedRegion);
+  }
+
+  const shuffled = [...filtered].sort(() => 0.5 - Math.random());
+  const options = shuffled.slice(0, 4);
+  const correct = options[Math.floor(Math.random() * options.length)];
+
+  setQuestion({ options, correct });
+  setSelected(null);
+  setTimeLeft(10);
+};
+
 
   useEffect(() => {
     if (isGameStarted && countries.length) {
@@ -94,6 +105,22 @@ const FlagQuizGame = () => {
         <div>
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Welcome to the Flag Quiz Game!</h1>
           <p className="mb-6">Test your knowledge of world flags. Click start to begin.</p>
+
+{/* select any region */}
+          <div className="mb-6">
+  <label className="font-medium mr-2">🌍 Select Any Region (Optional):</label>
+  <select
+    className="border rounded px-3 py-1"
+    value={selectedRegion}
+    onChange={(e) => setSelectedRegion(e.target.value)}
+  >
+    <option value="">All</option>
+    <option value="Europe">Europe</option>
+    <option value="Asia">Asia</option>
+    <option value="Africa">Africa</option>
+  </select>
+</div>
+
           <button
             className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
             onClick={() => setIsGameStarted(true)}
