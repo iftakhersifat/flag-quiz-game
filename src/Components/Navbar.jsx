@@ -21,6 +21,7 @@ const Navbar = () => {
             <div className='space-x-4 flex items-center justify-center md:flex hidden'>
                 <NavLink to="/" className={({isActive})=> isActive ? "text-amber-500 text-[18px] underline" : "text-[18px"}>Home</NavLink>
                 <NavLink to="/about" className={({isActive})=> isActive ? "text-amber-500 text-[18px] underline" : "text-[18px"}>About Us</NavLink>
+                
             </div>
             
         </div>

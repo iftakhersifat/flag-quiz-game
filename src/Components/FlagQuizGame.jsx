@@ -15,6 +15,18 @@ const FlagQuizGame = () => {
 
   const [selectedRegion, setSelectedRegion] = useState("");
 
+  const [isTTSOn, setIsTTSOn] = useState(true);
+
+//   voice add
+  useEffect(() => {
+  if (isTTSOn && question?.options?.length) {
+    const names = question.options.map(opt => opt.name.common).join(", ");
+    const utterance = new SpeechSynthesisUtterance(`Options are: ${names}`);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+  }
+}, [question, isTTSOn]);
+
   const correctSound = new Audio('/assets/sounds/ding-sound-effect_2.mp3');
   const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
 
@@ -98,7 +110,7 @@ const FlagQuizGame = () => {
   };
 
   return (
-    <div className="max-w-xl mx-auto text-center py-10 px-4">
+    <div className="container mx-auto text-center py-10 px-4 ">
 
       {/* Start Screen */}
       {!isGameStarted && !isGameEnded && (
@@ -106,20 +118,20 @@ const FlagQuizGame = () => {
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Welcome to the Flag Quiz Game!</h1>
           <p className="mb-6">Test your knowledge of world flags. Click start to begin.</p>
 
-{/* select any region */}
-          <div className="mb-6">
-  <label className="font-medium mr-2">🌍 Select Any Region (Optional):</label>
-  <select
-    className="border rounded px-3 py-1"
-    value={selectedRegion}
-    onChange={(e) => setSelectedRegion(e.target.value)}
-  >
-    <option value="">All</option>
-    <option value="Europe">Europe</option>
-    <option value="Asia">Asia</option>
-    <option value="Africa">Africa</option>
-  </select>
-</div>
+          {/* select any region */}
+                    <div className="mb-6">
+            <label className="font-medium mr-2">🌍 Select Any Region (Optional):</label>
+            <select
+              className="border rounded px-3 py-1"
+              value={selectedRegion}
+              onChange={(e) => setSelectedRegion(e.target.value)}
+            >
+              <option value="">All</option>
+              <option value="Europe">Europe</option>
+              <option value="Asia">Asia</option>
+              <option value="Africa">Africa</option>
+            </select>
+          </div>
 
           <button
             className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
@@ -152,6 +164,15 @@ const FlagQuizGame = () => {
                   className="w-[500px] h-auto mx-auto rounded-2xl shadow object-contain"
                 />
               </div>
+
+              <label className="flex items-center gap-2 mb-6 justify-center">
+              <input
+                type="checkbox"
+                checked={isTTSOn}
+                onChange={(e) => setIsTTSOn(e.target.checked)}
+              />
+              🔊 Enable Text-to-Speech
+            </label>
 
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {question.options.map((country) => (
