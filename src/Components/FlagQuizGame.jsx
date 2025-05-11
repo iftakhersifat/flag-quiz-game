@@ -21,6 +21,11 @@ const FlagQuizGame = () => {
   const [player1Score, setPlayer1Score] = useState(0);
   const [player2Score, setPlayer2Score] = useState(0);
 
+
+//   total answer
+const [reviewData, setReviewData] = useState([]);
+const [bonusCount, setBonusCount] = useState(0);
+
   const correctSound = new Audio('/assets/sounds/ding-sound-effect_2.mp3');
   const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
 
@@ -46,6 +51,8 @@ const FlagQuizGame = () => {
       window.speechSynthesis.speak(utterance);
     }
   }, [question, isTTSOn]);
+
+//   generate question
 
   const generateQuestion = () => {
     let filtered = countries;
@@ -78,9 +85,13 @@ const FlagQuizGame = () => {
     }
   }, [timeLeft, selected, isGameStarted, isGameEnded]);
 
+//  handle answer
+
   const handleAnswer = (country) => {
     setSelected(country);
     const isCorrect = country.cca3 === question.correct.cca3;
+    // for bonus
+    const gotBonus = isCorrect && timeLeft >= 6
 
     setHistory(prev => [...prev, {
       flag: question.correct.flags.png,
@@ -108,11 +119,16 @@ const FlagQuizGame = () => {
         setTurn(1);
       }
     } else {
+
       if (isCorrect) {
         correctSound.play();
         setCorrectCount(prev => {
           const newScore = prev + 1;
           if (newScore > highestScore) setHighestScore(newScore);
+        //   bonus
+          if (gotBonus) {
+      setBonusCount((prev) => prev + 1);
+    }
           return newScore;
         });
       } else {
@@ -120,6 +136,17 @@ const FlagQuizGame = () => {
         setWrongCount(prev => prev + 1);
       }
     }
+    // bonus
+    setReviewData((prev) => [
+    ...prev,
+    {
+      flag: question.correct.flags.png,
+      correctAnswer: question.correct.name.common,
+      userAnswer: country.name.common,
+      isCorrect,
+      bonus: gotBonus
+    }
+  ]);
   };
 
   const saveScore = () => {
@@ -232,6 +259,26 @@ const FlagQuizGame = () => {
       {isGameEnded && (
         <div>
           <h2 className="text-2xl font-bold mb-4">📋 Review Your Answers</h2>
+
+        {/* bonus section */}
+          <p className="mb-2">🧩 Total Questions Answered: <strong>{reviewData.length}</strong></p>
+            <p className="mb-4">⭐ Bonus Earned: <strong>{bonusCount}</strong></p>
+            <div className="space-y-4">
+              {reviewData.map((item, index) => (
+                <div key={index} className={`p-4 rounded-xl shadow-md ${item.isCorrect ? "bg-green-100" : "bg-red-100"}`}>
+                  <div className="flex items-center gap-4">
+                    <img src={item.flag} alt="Flag" className="w-14 h-9 object-contain rounded" />
+                    <div>
+                      <p><strong>Your Answer:</strong> {item.userAnswer}</p>
+                      <p><strong>Correct Answer:</strong> {item.correctAnswer}</p>
+                      {item.bonus && <p className="text-yellow-500 font-semibold">⭐ Bonus for Fast Answer!</p>}
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+
           {isMultiplayer && (
             <div className="mb-4">
               <p>👤 Player 1 Score: {player1Score}</p>
