@@ -10,12 +10,14 @@ import {
 import Root from './Components/Root.jsx';
 import Home from './Components/Home.jsx';
 import NotFound from './Components/NotFound.jsx';
+import About from './Components/About.jsx';
 const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
     children: [
       {index: true, Component: Home},
+      {path: "about", Component: About}
     ]
   },
   {
