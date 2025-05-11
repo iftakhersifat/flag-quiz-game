@@ -88,6 +88,10 @@ const [bonusCount, setBonusCount] = useState(0);
 //  handle answer
 
   const handleAnswer = (country) => {
+    // stop voice
+    window.speechSynthesis.cancel();
+
+
     setSelected(country);
     const isCorrect = country.cca3 === question.correct.cca3;
     // for bonus
@@ -163,6 +167,9 @@ const [bonusCount, setBonusCount] = useState(0);
   };
 
   const handleGameEnd = () => {
+    // stop voice
+    window.speechSynthesis.cancel();
+    
     setIsGameEnded(true);
     setIsGameStarted(false);
     if (correctCount > highestScore) {
