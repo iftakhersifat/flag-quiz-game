@@ -146,7 +146,7 @@ const FlagQuizGame = () => {
       {isGameStarted && !isGameEnded && (
         <>
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Choose the Correct Flag</h1>
-          <p className="mb-2">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
+          <p className="mb-6">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
           <div className="text-xl font-bold text-blue-500 mb-4">⏱️ Time Left: {timeLeft} seconds</div>
           <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mb-6">
             {/* Progress Bar for Time */}
@@ -164,13 +164,14 @@ const FlagQuizGame = () => {
 
           {question && (
             <>
-              <div className="mb-6">
+              <div className={`mb-6 transition-transform duration-500 ${selected ? "animate__animated animate__flipInY" : ""}`}>
                 <img
-                  src={question.correct.flags.png}
-                  alt="Country Flag"
-                  className="w-[500px] h-auto mx-auto rounded-2xl shadow object-contain"
-                />
-              </div>
+                    src={question.correct.flags.png}
+                    alt="Country Flag"
+                    className="w-[500px] h-auto mx-auto rounded-2xl shadow object-contain"
+                  />
+                </div>
+
 
             {/* voice setup */}
               <label className="flex items-center gap-2 mb-6 justify-center">
