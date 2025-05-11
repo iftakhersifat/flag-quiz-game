@@ -6,6 +6,7 @@ const FlagQuizGame = () => {
   const [selected, setSelected] = useState(null);
   const [correctCount, setCorrectCount] = useState(0);
   const [wrongCount, setWrongCount] = useState(0);
+  const [highestScore, setHighestScore] = useState(0);
 
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
@@ -29,18 +30,26 @@ const FlagQuizGame = () => {
   }, [countries]);
 
   const handleAnswer = (country) => {
-    setSelected(country);
-    if (country.cca3 === question.correct.cca3) {
-      setCorrectCount(prev => prev + 1);
-    } else {
-      setWrongCount(prev => prev + 1);
-    }
-  };
+  setSelected(country);
+
+  if (country.cca3 === question.correct.cca3) {
+    setCorrectCount((prev) => {
+      const newScore = prev + 1;
+      if (newScore > highestScore) {
+        setHighestScore(newScore);
+      }
+      return newScore;
+    });
+  } else {
+    setWrongCount((prev) => prev + 1);
+  }
+};
 
   return (
     <div className="max-w-xl mx-auto text-center py-10 px-4">
       <h1 className="text-3xl font-bold text-amber-500 mb-6">Choose the Correct Flag</h1>
-      <p className="mb-6">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount}</p>
+      <p className="mb-6">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
+
 
       {correctCount === 10 && (
         <div className="text-green-500 font-semibold mb-4">
@@ -80,8 +89,29 @@ const FlagQuizGame = () => {
         </>
       )}
 
-      <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion} > Next
-      </button>
+      {/* <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion} > Next
+      </button> */}
+
+      <div className="flex justify-center gap-4 mt-4">
+  <button
+    className="border px-5 py-2 rounded-xl bg-amber-500 text-white"
+    onClick={generateQuestion}
+  >
+    Next
+  </button>
+
+  <button
+    className="border px-5 py-2 rounded-xl bg-red-500 text-white"
+    onClick={() => {
+      setCorrectCount(0);
+      setWrongCount(0);
+      setSelected(null);
+      generateQuestion();
+    }}
+  >
+    Reset
+  </button>
+</div>
     </div>
   );
 };
