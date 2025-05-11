@@ -148,6 +148,13 @@ const FlagQuizGame = () => {
           <h1 className="text-3xl font-bold text-amber-500 mb-6">Choose the Correct Flag</h1>
           <p className="mb-2">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
           <div className="text-xl font-bold text-blue-500 mb-4">⏱️ Time Left: {timeLeft} seconds</div>
+          <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mb-6">
+            {/* Progress Bar for Time */}
+          <div className={`h-full transition-all duration-500 ${timeLeft <= 3 ? "bg-red-500" : "bg-amber-500"}`}
+            style={{ width: `${(timeLeft / 10) * 100}%` }}
+          ></div>
+        </div>
+
 
           {correctCount === 10 && (
             <div className="text-green-500 font-semibold mb-4">
@@ -165,6 +172,7 @@ const FlagQuizGame = () => {
                 />
               </div>
 
+            {/* voice setup */}
               <label className="flex items-center gap-2 mb-6 justify-center">
               <input
                 type="checkbox"
