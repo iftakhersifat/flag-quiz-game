@@ -8,6 +8,9 @@ const FlagQuizGame = () => {
   const [wrongCount, setWrongCount] = useState(0);
   const [highestScore, setHighestScore] = useState(0);
 
+//   highest score message 
+const [message, setMessage] = useState("");
+
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then(res => res.json())
@@ -91,6 +94,9 @@ const FlagQuizGame = () => {
 
       {/* <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion} > Next
       </button> */}
+      {message && (
+  <div className="text-blue-500 font-semibold mb-4">{message}</div>
+)}
 
       <div className="flex justify-center gap-4 mt-4">
   <button
@@ -101,17 +107,28 @@ const FlagQuizGame = () => {
   </button>
 
   <button
-    className="border px-5 py-2 rounded-xl bg-red-500 text-white"
-    onClick={() => {
-      setCorrectCount(0);
-      setWrongCount(0);
-      setSelected(null);
-      generateQuestion();
-    }}
-  >
-    Reset
-  </button>
+  className="border px-5 py-2 rounded-xl bg-red-500 text-white"
+  onClick={() => {
+    const totalScore = correctCount;
+
+    if (totalScore >= highestScore && totalScore !== 0) {
+      setMessage("🎉 New Highest Score!");
+      setHighestScore(totalScore);
+    } else {
+      setMessage("");
+    }
+
+    setCorrectCount(0);
+    setWrongCount(0);
+    setSelected(null);
+    generateQuestion();
+  }}
+>
+  Reset
+</button>
 </div>
+
+
     </div>
   );
 };
