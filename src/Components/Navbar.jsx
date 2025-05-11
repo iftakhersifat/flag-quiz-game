@@ -6,7 +6,8 @@ const Navbar = () => {
         isActive ? "text-amber-500 text-[18px] underline" : "text-[18px]";
 
     return (
-        <div className="container mx-auto flex justify-between mt-10 mb-10">
+        <div className='bg-gray-100'>
+            <div className="container mx-auto flex justify-between mt-10 mb-10">
             <div className="navbar-start">
                 <div className="dropdown">
                     <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden" aria-label="Toggle menu">
@@ -27,6 +28,7 @@ const Navbar = () => {
                 <NavLink to="/" className={getNavLinkClass}>Home</NavLink>
                 <NavLink to="/about" className={getNavLinkClass}>About Us</NavLink>
             </div>
+        </div>
         </div>
     );
 };
