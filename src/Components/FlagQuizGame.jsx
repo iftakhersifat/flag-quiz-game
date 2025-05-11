@@ -11,6 +11,9 @@ const FlagQuizGame = () => {
 //   highest score message 
 const [message, setMessage] = useState("");
 
+//  time set
+const [timeLeft, setTimeLeft] = useState(10);
+
   useEffect(() => {
     fetch("https://restcountries.com/v3.1/all")
       .then(res => res.json())
@@ -26,11 +29,31 @@ const [message, setMessage] = useState("");
     const correct = options[Math.floor(Math.random() * options.length)];
     setQuestion({ options, correct });
     setSelected(null);
+
+    // time setup
+    setTimeLeft(10);
   };
 
   useEffect(() => {
     if (countries.length) generateQuestion();
   }, [countries]);
+
+//   for time setup
+useEffect(() => {
+  if (!selected && timeLeft > 0) {
+    const timer = setTimeout(() => {
+      setTimeLeft((prev) => prev - 1);
+    }, 1000);
+    return () => clearTimeout(timer);
+  }
+
+  if (timeLeft === 0 && !selected) {
+    setSelected({}); // টাইম শেষ হলে উত্তর বেছে নেওয়া হয়নি
+    setWrongCount((prev) => prev + 1);
+  }
+}, [timeLeft, selected]);
+
+
 
   const handleAnswer = (country) => {
   setSelected(country);
@@ -62,6 +85,13 @@ const [message, setMessage] = useState("");
 
       {question && (
         <>
+        {/* time setup */}
+        <div className="text-xl font-bold text-blue-500 mb-4">
+      ⏱️ Time Left: {timeLeft} seconds
+        </div>
+
+
+        
           <div className="mb-6">
         <img
           src={question.correct.flags.png}
