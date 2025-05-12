@@ -2,7 +2,12 @@ import React from 'react';
 import { useTranslation } from 'react-i18next';
 
 const Footer = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+
+  const handleLanguageChange = (event) => {
+    const selectedLanguage = event.target.value;
+    i18n.changeLanguage(selectedLanguage);
+  };
 
   return (
     <footer className="bg-gray-900 text-white py-8 mt-16">
@@ -30,6 +35,18 @@ const Footer = () => {
               />
             </a>
           </div>
+        </div>
+
+        {/* Language Selector */}
+        <div className="text-center mt-4">
+          <select
+            value={i18n.language}
+            onChange={handleLanguageChange}
+            className="md:hidden border border-gray-300 bg-blue-200  text-black mb-8 rounded px-2 py-1 text-sm ml-auto mr-2 mt-2 max-w-[130px]"
+          >
+            <option value="en">English</option>
+            <option value="bn">বাংলা</option>
+          </select>
         </div>
 
         <div className="text-center text-sm text-gray-400 mt-4">

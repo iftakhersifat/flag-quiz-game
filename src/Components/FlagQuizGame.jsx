@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { toast } from 'react-toastify';
 
 const FlagQuizGame = () => {
   const { t } = useTranslation();
@@ -108,60 +109,72 @@ useEffect(() => {
 //  handle answer
 
   const handleAnswer = (country) => {
-    // stop voice
-    window.speechSynthesis.cancel();
+  window.speechSynthesis.cancel();
 
+  setSelected(country);
+  const isCorrect = country.cca3 === question.correct.cca3;
+  const gotBonus = isCorrect && timeLeft >= 6;  // Bonus points if correct and timeLeft >= 6
+  const basePoints = isCorrect ? 1 : 0;  // 1 point for correct answer
+  const bonusPoints = gotBonus ? 2 : 0;  // 2 bonus points if timeLeft >= 6
+  const totalPoints = basePoints + bonusPoints;  // Add base and bonus points
 
-    setSelected(country);
-    const isCorrect = country.cca3 === question.correct.cca3;
-    // for bonus
-    const gotBonus = isCorrect && timeLeft >= 6
+  setHistory(prev => [...prev, {
+    flag: question.correct.flags.png,
+    correctAnswer: question.correct.name.common,
+    selectedAnswer: country.name.common,
+    isCorrect
+  }]);
 
-    setHistory(prev => [...prev, {
-      flag: question.correct.flags.png,
-      correctAnswer: question.correct.name.common,
-      selectedAnswer: country.name.common,
-      isCorrect
-    }]);
-
-    if (isMultiplayer) {
-      if (turn === 1) {
-        if (isCorrect) {
-          correctSound.play();
-          setPlayer1Score(prev => prev + 1);
-        } else {
-          wrongSound.play();
-        }
-        setTurn(2);
-      } else {
-        if (isCorrect) {
-          correctSound.play();
-          setPlayer2Score(prev => prev + 1);
-        } else {
-          wrongSound.play();
-        }
-        setTurn(1);
-      }
-    } else {
-
+  if (isMultiplayer) {
+    if (turn === 1) {
       if (isCorrect) {
         correctSound.play();
-        setCorrectCount(prev => {
-          const newScore = prev + 1;
-          if (newScore > highestScore) setHighestScore(newScore);
-        //   bonus
-          if (gotBonus) {
-      setBonusCount((prev) => prev + 1);
-    }
-          return newScore;
-        });
+        toast.success(`✅ Player 1 got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`);
+        setPlayer1Score(prev => prev + totalPoints);
       } else {
         wrongSound.play();
-        setWrongCount(prev => prev + 1);
+        toast.error("❌ Player 1 got it wrong!");
       }
+      setTurn(2);
+    } else {
+      if (isCorrect) {
+        correctSound.play();
+        toast.success(`✅ Player 2 got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`);
+        setPlayer2Score(prev => prev + totalPoints);
+      } else {
+        wrongSound.play();
+        toast.error("❌ Player 2 got it wrong!");
+      }
+      setTurn(1);
     }
-    // bonus
-    setReviewData((prev) => [
+  } else {
+    if (isCorrect) {
+      correctSound.play();
+      setCorrectCount(prev => prev + totalPoints);  // Add both base and bonus points to correctCount
+      if (gotBonus) {
+        setBonusCount(prev => prev + 1);  // Increase bonus count if bonus points earned
+      }
+
+      toast.success(`✅ Correct! You got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        theme: "colored"
+      });
+    } else {
+      wrongSound.play();
+      setWrongCount(prev => prev + 1);
+      toast.error("❌ Wrong answer!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        theme: "dark"
+      });
+    }
+  }
+
+  // Add to review data
+  setReviewData((prev) => [
     ...prev,
     {
       flag: question.correct.flags.png,
@@ -171,20 +184,42 @@ useEffect(() => {
       bonus: gotBonus
     }
   ]);
+};
+
+
+
+
+const saveScore = () => {
+  let totalScore = 0;
+
+  reviewData.forEach((item) => {
+    let answerPoints = 0;
+
+    // Check if the answer is correct
+    if (item.isCorrect) {
+      answerPoints = 1;
+
+      if (item.bonus) {
+        answerPoints += 2; 
+      }
+    }
+    totalScore += answerPoints;
+  });
+
+  const newEntry = {
+    name: username || "Anonymous",
+    score: totalScore,
+    date: new Date().toLocaleString(),
   };
 
-  const saveScore = () => {
-    const totalScore = correctCount * 10 + timeLeft;
-    const newEntry = {
-      name: username || "Anonymous",
-      score: totalScore,
-      date: new Date().toLocaleString(),
-    };
-    const existing = JSON.parse(localStorage.getItem("leaderboard")) || [];
-    const updated = [...existing, newEntry].sort((a, b) => b.score - a.score).slice(0, 10);
-    localStorage.setItem("leaderboard", JSON.stringify(updated));
-    setLeaderboard(updated);
-  };
+  const existing = JSON.parse(localStorage.getItem("leaderboard")) || [];
+
+  const updated = [...existing, newEntry].sort((a, b) => b.score - a.score).slice(0, 10);
+
+  localStorage.setItem("leaderboard", JSON.stringify(updated));
+
+  setLeaderboard(updated);
+};
 
   const handleGameEnd = () => {
     // stop voice
@@ -307,7 +342,7 @@ useEffect(() => {
 
 
           {isMultiplayer && (
-            <div className="mb-4">
+            <div className="mb-4 mt-4">
               <p>👤 Player 1 Score: {player1Score}</p>
               <p>👤 Player 2 Score: {player2Score}</p>
               <p>🏆 Winner: {player1Score === player2Score ? "It's a Tie!" : player1Score > player2Score ? "Player 1" : "Player 2"}</p>

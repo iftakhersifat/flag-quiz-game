@@ -12,6 +12,7 @@ import Root from './Components/Root.jsx';
 import Home from './Components/Home.jsx';
 import NotFound from './Components/NotFound.jsx';
 import About from './Components/About.jsx';
+import { ToastContainer } from 'react-toastify';
 // for language
 
 
@@ -33,6 +34,7 @@ const router = createBrowserRouter([
 
 createRoot(document.getElementById('root')).render(
   <StrictMode>
+    <ToastContainer position="top-right" autoClose={2000} hideProgressBar />
     <RouterProvider router={router} />
   </StrictMode>,
 )
