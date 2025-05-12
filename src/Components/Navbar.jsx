@@ -1,27 +1,28 @@
-import React, { useState } from 'react';
-import { NavLink } from 'react-router';
+import React from 'react';
+import { NavLink } from 'react-router'; // Corrected
 import { motion } from 'framer-motion';
+import { useTranslation } from 'react-i18next';
 
 const Navbar = () => {
-    const [language, setLanguage] = useState('en'); // Default: English
+    const { t, i18n } = useTranslation();
 
     const navItems = [
-        { path: "/", label: language === 'bn' ? "হোম" : "Home" },
-        { path: "/about", label: language === 'bn' ? "আমাদের সম্পর্কে" : "About Us" }
+        { path: "/", label: t("home") },
+        { path: "/about", label: t("about") }
     ];
 
     const getNavLinkClass = ({ isActive }) =>
         isActive ? "text-amber-500 underline" : "text-gray-800";
 
     const handleLanguageChange = (e) => {
-        setLanguage(e.target.value);
+        i18n.changeLanguage(e.target.value);
     };
 
     return (
         <div className='bg-gray-100 shadow-sm'>
             <div className="container mx-auto flex justify-between items-center py-4 px-4">
                 
-                {/* Left Section (Logo + Dropdown) */}
+                {/* Logo + Mobile Dropdown */}
                 <div className="flex items-center space-x-3">
                     <div className="dropdown md:hidden">
                         <div tabIndex={0} role="button" className="btn btn-ghost" aria-label="Toggle menu">
@@ -49,11 +50,11 @@ const Navbar = () => {
                         <img className='w-10' src="/assets/logo.png" alt="Flag Quiz Game Logo" />
                     </NavLink>
                     <h1 className='text-2xl font-bold text-amber-500 whitespace-nowrap'>
-                        {language === 'bn' ? "ফ্ল্যাগ কুইজ গেম" : "Flag Quiz Game"}
+                        {t("title")}
                     </h1>
                 </div>
 
-                {/* Right Section (Menu + Language) */}
+                {/* Desktop Menu + Language Selector */}
                 <div className="hidden md:flex items-center space-x-6">
                     {navItems.map((item, index) => (
                         <motion.div
@@ -70,16 +71,14 @@ const Navbar = () => {
                         </motion.div>
                     ))}
 
-                    {/* Language Selector */}
                     <select
-                        value={language}
+                        value={i18n.language}
                         onChange={handleLanguageChange}
                         className="border border-gray-300 rounded px-2 py-1 text-sm"
                     >
                         <option value="en">English</option>
                         <option value="bn">বাংলা</option>
                     </select>
-                    
                 </div>
             </div>
         </div>

@@ -1,5 +1,6 @@
 import { StrictMode } from 'react'
 import { createRoot } from 'react-dom/client'
+import "./i18n.js";
 import './index.css'
 import 'animate.css';
 import App from './App.jsx'
@@ -11,6 +12,10 @@ import Root from './Components/Root.jsx';
 import Home from './Components/Home.jsx';
 import NotFound from './Components/NotFound.jsx';
 import About from './Components/About.jsx';
+// for language
+
+
+
 const router = createBrowserRouter([
   {
     path: "/",
