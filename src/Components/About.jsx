@@ -1,7 +1,11 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { useTranslation } from 'react-i18next';
 
 const About = () => {
+  useEffect(() => {
+          document.title = "About Us";
+        }, []);
+
   const { t } = useTranslation();
 
   return (
