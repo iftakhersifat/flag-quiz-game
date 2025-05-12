@@ -7,6 +7,8 @@ import { toast } from 'react-toastify';
 const FlagQuizGame = () => {
   const { t } = useTranslation();
   
+const [currentStreak, setCurrentStreak] = useState(0);
+const [achievements, setAchievements] = useState([]);
 
 
 
@@ -173,28 +175,50 @@ useEffect(() => {
     }
   } else {
     if (isCorrect) {
-      correctSound.play();
-      setCorrectCount(prev => prev + 1);  // Add both base and bonus points to correctCount
-      if (gotBonus) {
-        setBonusCount(prev => prev + 1);  // Increase bonus count if bonus points earned
+  correctSound.play();
+  setCorrectCount(prev => prev + 1);
+  setCurrentStreak(prev => {
+    const newStreak = prev + 1;
+
+    if (newStreak === 10 && !achievements.includes("Streak Master")) {
+      setAchievements(prev => [...prev, "Streak Master"]);
+      toast.success("🏅 Achievement Unlocked: Streak Master!");
+    }
+
+    return newStreak;
+  });
+
+  if (gotBonus) {
+    setBonusCount(prev => {
+      const newBonus = prev + 1;
+
+      if (newBonus === 5 && !achievements.includes("Fast Thinker")) {
+        setAchievements(prev => [...prev, "Fast Thinker"]);
+        toast.success("⚡ Achievement Unlocked: Fast Thinker!");
       }
 
-      toast.success(`✅ Correct! You got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`, {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        theme: "colored"
-      });
-    } else {
-      wrongSound.play();
-      setWrongCount(prev => prev + 1);
-      toast.error("❌ Wrong answer!", {
-        position: "top-right",
-        autoClose: 2000,
-        hideProgressBar: true,
-        theme: "dark"
-      });
-    }
+      return newBonus;
+    });
+  }
+
+  toast.success(`✅ Correct! You got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`, {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    theme: "colored"
+  });
+} else {
+  wrongSound.play();
+  setWrongCount(prev => prev + 1);
+  setCurrentStreak(0); // Reset streak on wrong answer
+  toast.error("❌ Wrong answer!", {
+    position: "top-right",
+    autoClose: 2000,
+    hideProgressBar: true,
+    theme: "dark"
+  });
+}
+
   }
 
   // Add to review data
@@ -430,6 +454,18 @@ const saveScore = () => {
                 <FaWhatsapp size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on WhatsApp</span>
               </div></a>
           </div>
+
+          {achievements.length > 0 && (
+          <div className="p-4 bg-yellow-100 rounded mt-4">
+            <h3 className="font-bold text-lg">🏅 Achievements</h3>
+            <ul className="list-disc pl-5">
+              {achievements.map((achv, i) => (
+                <li key={i}>{achv}</li>
+              ))}
+            </ul>
+          </div>
+        )}
+
 
           <button onClick={handleGameReset} className="mt-8 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 {t("play_again")}</button>
         </div>
