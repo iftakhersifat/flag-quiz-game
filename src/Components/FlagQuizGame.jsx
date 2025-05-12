@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { useTranslation } from 'react-i18next';
+import { FaFacebookF, FaTwitter, FaWhatsapp } from 'react-icons/fa';
+import { Link } from 'react-router';
 import { toast } from 'react-toastify';
 
 const FlagQuizGame = () => {
@@ -384,11 +386,12 @@ const saveScore = () => {
           
 
           {/* score section */}
-          <div className="mt-6">
+          <div className="mt-6 space-y-4">
             <input type="text" placeholder={t("enter_name")} className="border rounded px-4 py-2" value={username} onChange={(e) => setUsername(e.target.value)} />
             <button className="ml-2 px-4 py-2 bg-green-600 text-white rounded" onClick={saveScore}>💾 {t("save_score")}</button>
           </div>
 
+          
           <div className="mt-8">
             <h2 className="text-xl font-bold mb-4">🏆 {t("leaderboard")}</h2>
             <ul className="space-y-2">
@@ -401,7 +404,30 @@ const saveScore = () => {
             </ul>
           </div>
 
-          <button onClick={handleGameReset} className="mt-6 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 {t("play_again")}</button>
+              {/* social media */}
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
+            {/* X */}
+            <Link to={`https://x.com/intent/tweet?text=I scored ${correctCount} in FlagQuizGame!`} target="_blank" rel="noopener noreferrer">
+              <div className='flex justify-center gap-4 items-center rounded-xl px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition '>
+                <FaTwitter size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on X</span>
+              </div>
+            </Link>
+
+            {/* Facebook */}
+            <Link to={`https://www.facebook.com/sharer/sharer.php?u=http://localhost:5173/&quote=I scored ${correctCount} in FlagQuizGame!`}target="_blank"
+              rel="noopener noreferrer">
+              <div className='flex justify-center gap-4 items-center whitespace-nowrap rounded-xl px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 transition'>
+                <FaFacebookF size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on Facebook</span>
+              </div></Link>
+
+            {/* WhatsApp */}
+            <Link to={`https://api.whatsapp.com/send?text=I scored ${correctCount} in FlagQuizGame! Try it: http://localhost:5173/`} target="_blank" rel="noopener noreferrer" >
+              <div className='flex justify-center gap-4 whitespace-nowrap items-center rounded-xl px-4 py-2 bg-green-500 text-white hover:bg-green-600 transition'>
+                <FaWhatsapp size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on WhatsApp</span>
+              </div></Link>
+          </div>
+
+          <button onClick={handleGameReset} className="mt-8 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 {t("play_again")}</button>
         </div>
       )}
     </div>
