@@ -1,6 +1,11 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 const FlagQuizGame = () => {
+  const { t } = useTranslation();
+
+
+
   const [countries, setCountries] = useState([]);
   const [question, setQuestion] = useState(null);
   const [selected, setSelected] = useState(null);
@@ -194,11 +199,11 @@ const [bonusCount, setBonusCount] = useState(0);
     <div className="container mx-auto text-center py-10 px-4">
       {!isGameStarted && !isGameEnded && (
         <div>
-          <h1 className="text-3xl font-bold text-amber-500 mb-6">Welcome to the Flag Quiz Game!</h1>
-          <p className="mb-6">Test your knowledge of world flags. Click start to begin.</p>
+          <h1 className="text-3xl font-bold text-amber-500 mb-6">{t("welcome_title")}</h1>
+          <p className="mb-6">{t("welcome_text")}</p>
 
           <div className="mb-4">
-            <label className="mr-2 font-semibold">Multiplayer Mode:</label>
+            <label className="mr-2 font-semibold">{t("multiplayer_mode")}</label>
             <input type="checkbox" checked={isMultiplayer} onChange={(e) => setIsMultiplayer(e.target.checked)} />
           </div>
 
@@ -212,18 +217,18 @@ const [bonusCount, setBonusCount] = useState(0);
             </select>
           </div>
           <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={() => setIsGameStarted(true)}>
-            Start Game
+            {t("start_button")}
           </button>
         </div>
       )}
 
       {isGameStarted && !isGameEnded && (
         <>
-          <h1 className="text-3xl font-bold text-amber-500 mb-6">Choose the Correct Flag</h1>
+          <h1 className="text-3xl font-bold text-amber-500 mb-6">{t("choose_correct_flag")}</h1>
           {isMultiplayer && <p className="mb-4">👤 Player 1: {player1Score} | 👤 Player 2: {player2Score} | Now Playing: <span className="font-bold">Player {turn}</span></p>}
-          <p className="mb-6">✅ Correct: {correctCount} | ❌ Wrong: {wrongCount} | 🏆 Highest Score: {highestScore}</p>
+          <p className="mb-6">✅ {t("correct")}: {correctCount} | ❌ {t("wrong")}: {wrongCount} | 🏆 {t("highest_score")}: {highestScore}</p>
 
-          <div className="text-xl font-bold text-blue-500 mb-4">⏱️ Time Left: {timeLeft} seconds</div>
+          <div className="text-xl font-bold text-blue-500 mb-4">⏱️ {t("time_left")}: {timeLeft} seconds</div>
           <div className="w-full bg-gray-200 h-4 rounded-full overflow-hidden mb-6">
             <div className={`h-full transition-all duration-500 ${timeLeft <= 3 ? "bg-red-500" : "bg-amber-500"}`} style={{ width: `${(timeLeft / 10) * 100}%` }}></div>
           </div>
@@ -235,7 +240,7 @@ const [bonusCount, setBonusCount] = useState(0);
               </div>
               <label className="flex items-center gap-2 mb-6 justify-center">
                 <input type="checkbox" checked={isTTSOn} onChange={(e) => setIsTTSOn(e.target.checked)} />
-                🔊 Enable Text-to-Speech
+                🔊 {t("enable_tts")}
               </label>
               <div className="grid grid-cols-2 gap-4 mb-6">
                 {question.options.map((country) => (
@@ -247,7 +252,7 @@ const [bonusCount, setBonusCount] = useState(0);
               {selected && (
                 <div className="mb-4 text-lg">
                   {selected.cca3 === question.correct.cca3 ? (
-                    <span className="text-green-600 font-semibold">Correct!</span>
+                    <span className="text-green-600 font-semibold">{t("correct_answer")}</span>
                   ) : (
                     <span className="text-red-600 font-semibold">Incorrect! It was {question.correct.name.common}.</span>
                   )}
@@ -257,28 +262,28 @@ const [bonusCount, setBonusCount] = useState(0);
           )}
 
           <div className="flex justify-center gap-4 mt-4">
-            <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion}>Next</button>
-            <button className="border px-5 py-2 rounded-xl bg-red-500 text-white" onClick={handleGameEnd}>End Game</button>
+            <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion}>{t("next")}</button>
+            <button className="border px-5 py-2 rounded-xl bg-red-500 text-white" onClick={handleGameEnd}>{t("end")}</button>
           </div>
         </>
       )}
 
       {isGameEnded && (
         <div>
-          <h2 className="text-2xl font-bold mb-4">📋 Review Your Answers</h2>
+          <h2 className="text-2xl font-bold mb-4">📋 {t("review_title")}</h2>
 
         {/* bonus section */}
-          <p className="mb-2">🧩 Total Questions Answered: <strong>{reviewData.length}</strong></p>
-            <p className="mb-4">⭐ Bonus Earned: <strong>{bonusCount}</strong></p>
+          <p className="mb-2">🧩 {t("total_answered")}: <strong>{reviewData.length}</strong></p>
+            <p className="mb-4">⭐ {t("bonus_earned")}: <strong>{bonusCount}</strong></p>
             <div className="space-y-4">
               {reviewData.map((item, index) => (
                 <div key={index} className={`p-4 rounded-xl shadow-md ${item.isCorrect ? "bg-green-100" : "bg-red-100"}`}>
                   <div className="flex items-center gap-4">
                     <img src={item.flag} alt="Flag" className="w-14 h-9 object-contain rounded" />
-                    <div>
-                      <p><strong>Your Answer:</strong> {item.userAnswer}</p>
-                      <p><strong>Correct Answer:</strong> {item.correctAnswer}</p>
-                      {item.bonus && <p className="text-yellow-500 font-semibold">⭐ Bonus for Fast Answer!</p>}
+                    <div className='space-y-1'>
+                      <p><strong>{t("your_answer")}:</strong> {item.userAnswer}</p>
+                      <p><strong>{t("correct_answer")}:</strong> {item.correctAnswer}</p>
+                      {item.bonus && <p className="text-yellow-500 font-semibold">⭐ {t("fast_bonus")}!</p>}
                     </div>
                   </div>
                 </div>
@@ -293,27 +298,16 @@ const [bonusCount, setBonusCount] = useState(0);
               <p>🏆 Winner: {player1Score === player2Score ? "It's a Tie!" : player1Score > player2Score ? "Player 1" : "Player 2"}</p>
             </div>
           )}
-          <ul className="space-y-4">
-            {history.map((item, index) => (
-              <li key={index} className="border p-4 rounded-xl shadow bg-white text-left">
-                <div className="flex items-center gap-4">
-                  <img src={item.flag} alt="Flag" className="w-16 h-10 object-contain" />
-                  <div>
-                    <p className="font-semibold">Correct: {item.correctAnswer}</p>
-                    <p className={`${item.isCorrect ? "text-green-600" : "text-red-500"}`}>Your Answer: {item.selectedAnswer}</p>
-                  </div>
-                </div>
-              </li>
-            ))}
-          </ul>
+          
 
+          {/* score section */}
           <div className="mt-6">
-            <input type="text" placeholder="Enter your name" className="border rounded px-4 py-2" value={username} onChange={(e) => setUsername(e.target.value)} />
-            <button className="ml-2 px-4 py-2 bg-green-600 text-white rounded" onClick={saveScore}>💾 Save Score</button>
+            <input type="text" placeholder={t("enter_name")} className="border rounded px-4 py-2" value={username} onChange={(e) => setUsername(e.target.value)} />
+            <button className="ml-2 px-4 py-2 bg-green-600 text-white rounded" onClick={saveScore}>💾 {t("save_score")}</button>
           </div>
 
           <div className="mt-8">
-            <h2 className="text-xl font-bold mb-4">🏆 Leaderboard</h2>
+            <h2 className="text-xl font-bold mb-4">🏆 {t("leaderboard")}</h2>
             <ul className="space-y-2">
               {leaderboard.map((entry, index) => (
                 <li key={index} className="border p-2 rounded flex justify-between bg-white shadow">
@@ -324,7 +318,7 @@ const [bonusCount, setBonusCount] = useState(0);
             </ul>
           </div>
 
-          <button onClick={handleGameReset} className="mt-6 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 Play Again</button>
+          <button onClick={handleGameReset} className="mt-6 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 {t("play_again")}</button>
         </div>
       )}
     </div>
