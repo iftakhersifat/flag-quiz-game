@@ -180,7 +180,7 @@ useEffect(() => {
   setCurrentStreak(prev => {
     const newStreak = prev + 1;
 
-    if (newStreak === 10 && !achievements.includes("Streak Master")) {
+    if (newStreak === 20 && !achievements.includes("Streak Master")) {
       setAchievements(prev => [...prev, "Streak Master"]);
       toast.success("🏅 Achievement Unlocked: Streak Master!");
     }
@@ -192,7 +192,7 @@ useEffect(() => {
     setBonusCount(prev => {
       const newBonus = prev + 1;
 
-      if (newBonus === 5 && !achievements.includes("Fast Thinker")) {
+      if (newBonus === 10 && !achievements.includes("Fast Thinker")) {
         setAchievements(prev => [...prev, "Fast Thinker"]);
         toast.success("⚡ Achievement Unlocked: Fast Thinker!");
       }
@@ -210,7 +210,7 @@ useEffect(() => {
 } else {
   wrongSound.play();
   setWrongCount(prev => prev + 1);
-  setCurrentStreak(0); // Reset streak on wrong answer
+  setCurrentStreak(0);
   toast.error("❌ Wrong answer!", {
     position: "top-right",
     autoClose: 2000,
