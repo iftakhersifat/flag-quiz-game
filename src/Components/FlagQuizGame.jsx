@@ -208,12 +208,12 @@ const [bonusCount, setBonusCount] = useState(0);
           </div>
 
           <div className="mb-6">
-            <label className="font-medium mr-2">🌍 Select Any Region (Optional):</label>
+            <label className="font-medium mr-2">🌍 {t("select")}:</label>
             <select className="border rounded px-3 py-1" value={selectedRegion} onChange={(e) => setSelectedRegion(e.target.value)}>
-              <option value="">All</option>
-              <option value="Europe">Europe</option>
-              <option value="Asia">Asia</option>
-              <option value="Africa">Africa</option>
+              <option value="">{t("all")}</option>
+              <option value="Europe">{t("europe")}</option>
+              <option value="Asia">{t("asia")}</option>
+              <option value="Africa">{t("africa")}</option>
             </select>
           </div>
           <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={() => setIsGameStarted(true)}>

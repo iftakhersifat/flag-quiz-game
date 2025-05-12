@@ -48,6 +48,11 @@ const resources = {
       "enter_name": "Enter your name",
       next: "Next",
       end: "End Game",
+      select: " Select Any Region (Optional)",
+      all: "All",
+      europe: "Europe",
+      asia: "Asia",
+      africa: "Africa",
 
     }
   },
@@ -96,6 +101,12 @@ const resources = {
       enter_name: "আপনার নাম লিখুন",
       next: "পরবর্তী",
       end : "খেলা শেষ করুন",
+      select: "যেকোনো অঞ্চল নির্বাচন করুন (ঐচ্ছিক)",
+      all: "সব",
+      europe: "ইউরোপ",
+      asia: "এশিয়া",
+      africa: "আফ্রিকা",
+
     }
   }
 };
