@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 
 const FlagQuizGame = () => {
   const { t } = useTranslation();
+  
 
 
 
@@ -43,6 +44,9 @@ const FlagQuizGame = () => {
       return 10;
   }
 };
+
+
+
 
 
 
@@ -170,7 +174,7 @@ useEffect(() => {
   } else {
     if (isCorrect) {
       correctSound.play();
-      setCorrectCount(prev => prev + totalPoints);  // Add both base and bonus points to correctCount
+      setCorrectCount(prev => prev + 1);  // Add both base and bonus points to correctCount
       if (gotBonus) {
         setBonusCount(prev => prev + 1);  // Increase bonus count if bonus points earned
       }
@@ -407,24 +411,24 @@ const saveScore = () => {
               {/* social media */}
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 mt-8">
             {/* X */}
-            <Link to={`https://x.com/intent/tweet?text=I scored ${correctCount} in FlagQuizGame!`} target="_blank" rel="noopener noreferrer">
+            <a href={`https://x.com/intent/tweet?text=I scored ${correctCount} in FlagQuizGame!`} target="_blank" rel="noopener noreferrer">
               <div className='flex justify-center gap-4 items-center rounded-xl px-4 py-2 bg-blue-500 text-white hover:bg-blue-600 transition '>
                 <FaTwitter size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on X</span>
               </div>
-            </Link>
+            </a>
 
             {/* Facebook */}
-            <Link to={`https://www.facebook.com/sharer/sharer.php?u=http://localhost:5173/&quote=I scored ${correctCount} in FlagQuizGame!`}target="_blank"
+            <a href={`https://www.facebook.com/sharer/sharer.php?u=http://localhost:5173/&quote=I scored ${correctCount} in FlagQuizGame!`}target="_blank"
               rel="noopener noreferrer">
               <div className='flex justify-center gap-4 items-center whitespace-nowrap rounded-xl px-4 py-2 bg-blue-700 text-white hover:bg-blue-800 transition'>
                 <FaFacebookF size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on Facebook</span>
-              </div></Link>
+              </div></a>
 
             {/* WhatsApp */}
-            <Link to={`https://api.whatsapp.com/send?text=I scored ${correctCount} in FlagQuizGame! Try it: http://localhost:5173/`} target="_blank" rel="noopener noreferrer" >
+            <a href={`https://api.whatsapp.com/send?text=I scored ${correctCount} in FlagQuizGame! Try it: http://localhost:5173/`} target="_blank" rel="noopener noreferrer" >
               <div className='flex justify-center gap-4 whitespace-nowrap items-center rounded-xl px-4 py-2 bg-green-500 text-white hover:bg-green-600 transition'>
                 <FaWhatsapp size={20} /> <span className='md:text-[16px] lg:text-xl'>Share on WhatsApp</span>
-              </div></Link>
+              </div></a>
           </div>
 
           <button onClick={handleGameReset} className="mt-8 px-5 py-2 bg-amber-500 text-white rounded-xl">🔁 {t("play_again")}</button>
