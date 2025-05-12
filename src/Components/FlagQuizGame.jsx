@@ -49,13 +49,28 @@ const [bonusCount, setBonusCount] = useState(0);
   }, []);
 
   useEffect(() => {
-    if (isTTSOn && question?.options?.length) {
-      const names = question.options.map(opt => opt.name.common).join(", ");
-      const utterance = new SpeechSynthesisUtterance(`Options are: ${names}`);
-      utterance.lang = 'en-US';
-      window.speechSynthesis.speak(utterance);
-    }
-  }, [question, isTTSOn]);
+  if (isTTSOn && question?.options?.length) {
+    // voice cancel 
+    window.speechSynthesis.cancel();
+
+    const names = question.options.map(opt => opt.name.common).join(", ");
+    const utterance = new SpeechSynthesisUtterance(`Options are: ${names}`);
+    utterance.lang = 'en-US';
+    window.speechSynthesis.speak(utterance);
+  }
+}, [question, isTTSOn]);
+
+// Unload- voice 
+useEffect(() => {
+  const handleBeforeUnload = () => {
+    window.speechSynthesis.cancel();
+  };
+
+  window.addEventListener('beforeunload', handleBeforeUnload);
+  return () => {
+    window.removeEventListener('beforeunload', handleBeforeUnload);
+  };
+}, []);
 
 //   generate question
 

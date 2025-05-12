@@ -37,8 +37,7 @@ const Navbar = () => {
                                     whileHover={{ scale: 1.05 }}
                                     initial={{ opacity: 0, y: -5 }}
                                     animate={{ opacity: 1, y: 0 }}
-                                    transition={{ duration: 0.2, delay: index * 0.05 }}
-                                >
+                                    transition={{ duration: 0.2, delay: index * 0.05 }}>
                                     <NavLink to={item.path} className={getNavLinkClass}>
                                         {item.label}
                                     </NavLink>
@@ -49,13 +48,14 @@ const Navbar = () => {
                     <NavLink to="/">
                         <img className='w-10' src="/assets/logo.png" alt="Flag Quiz Game Logo" />
                     </NavLink>
-                    <h1 className='text-2xl font-bold text-amber-500 whitespace-nowrap'>
+                    <h1 className='text-xl font-bold text-amber-500 whitespace-nowrap'>
                         {t("title")}
                     </h1>
                 </div>
 
                 {/* Desktop Menu + Language Selector */}
-                <div className="hidden md:flex items-center space-x-6">
+                <div className='flex items-center space-x-6'>
+                    <div className="hidden md:flex items-center space-x-6">
                     {navItems.map((item, index) => (
                         <motion.div
                             key={item.path}
@@ -63,8 +63,7 @@ const Navbar = () => {
                             whileTap={{ scale: 0.95 }}
                             initial={{ opacity: 0, y: -10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            transition={{ duration: 0.3, delay: index * 0.1 }}
-                        >
+                            transition={{ duration: 0.3, delay: index * 0.1 }}>
                             <NavLink to={item.path} className={getNavLinkClass}>
                                 {item.label}
                             </NavLink>
@@ -72,13 +71,25 @@ const Navbar = () => {
                     ))}
 
                     <select
+                      value={i18n.language}
+                      onChange={handleLanguageChange}
+                      className="hidden md:block border border-gray-300 rounded px-2 py-1 text-sm">
+                      <option value="en">English</option>
+                      <option value="bn">বাংলা</option>
+                    </select>
+
+                    </div>
+
+                    <div className="block md:hidden mt-2 ml-4">
+                      <select
                         value={i18n.language}
                         onChange={handleLanguageChange}
-                        className="border border-gray-300 rounded px-2 py-1 text-sm"
-                    >
+                        className="border border-gray-300 rounded px-2 py-1 text-sm">
                         <option value="en">English</option>
                         <option value="bn">বাংলা</option>
-                    </select>
+                      </select>
+                    </div>
+                
                 </div>
             </div>
         </div>
