@@ -284,19 +284,19 @@ const saveScore = () => {
               <option value="Africa">{t("africa")}</option>
             </select>
           </div>
-{/* difficulty setup */}
+          {/* difficulty setup */}
           <div className="mb-6">
-  <label className="font-medium mr-2">🎯 Difficulty:</label>
-  <select
-    className="border rounded px-3 py-1"
-    value={difficulty}
-    onChange={(e) => setDifficulty(e.target.value)}
-  >
-    <option value="easy">🟢 Easy (10s)</option>
-    <option value="medium">🟡 Medium (7s)</option>
-    <option value="hard">🔴 Hard (5s)</option>
-  </select>
-</div>
+          <label className="font-medium mr-2">🎯 {t("difficulty")}:</label>
+          <select
+            className="border rounded px-3 py-1"
+            value={difficulty}
+            onChange={(e) => setDifficulty(e.target.value)}
+          >
+            <option value="easy">🟢 {t("easy")}</option>
+            <option value="medium">🟡 {t("medium")}</option>
+            <option value="hard">🔴 {t("hard")}</option>
+          </select>
+        </div>
 
           <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={() => setIsGameStarted(true)}>
             {t("start_button")}
@@ -355,7 +355,7 @@ const saveScore = () => {
           <h2 className="text-2xl font-bold mb-4">📋 {t("review_title")}</h2>
 
         {/* bonus section */}
-        <p className="mb-2">🎯 Difficulty Level: <strong>{difficulty}</strong></p>
+        <p className="mb-2">🎯 {t("level")}: <strong>{t(difficulty)}</strong></p>
           <p className="mb-2">🧩 {t("total_answered")}: <strong>{reviewData.length}</strong></p>
             <p className="mb-4">⭐ {t("bonus_earned")}: <strong>{bonusCount}</strong></p>
             <div className="space-y-4">

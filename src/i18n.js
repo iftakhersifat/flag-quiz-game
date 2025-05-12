@@ -53,6 +53,11 @@ const resources = {
       europe: "Europe",
       asia: "Asia",
       africa: "Africa",
+      difficulty: "Difficulty",
+      easy: "Easy (10s)",
+      medium: "Medium (7s)",
+      hard: "Hard (5s)",
+      level: "Difficulty Level",
 
     }
   },
@@ -106,6 +111,11 @@ const resources = {
       europe: "ইউরোপ",
       asia: "এশিয়া",
       africa: "আফ্রিকা",
+      difficulty: "খেলার স্তর নির্বাচন করুন",
+      easy: "সহজ (১০সে.)",
+      medium: "মাঝারি (৭সে.)",
+      hard: "কঠিন (৫সে.)",
+      level: "খেলার স্তর",
 
     }
   }
