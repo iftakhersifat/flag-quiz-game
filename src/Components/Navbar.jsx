@@ -1,5 +1,5 @@
 import React from 'react';
-import { NavLink } from 'react-router'; // Corrected
+import { NavLink } from 'react-router';
 import { motion } from 'framer-motion';
 import { useTranslation } from 'react-i18next';
 
