@@ -73,7 +73,7 @@ const Navbar = () => {
                     <select
                       value={i18n.language}
                       onChange={handleLanguageChange}
-                      className="hidden md:block border border-gray-300 rounded px-2 py-1 text-sm">
+                      className="hidden md:block border-1 border-gray-300 bg-blue-200 rounded px-2 py-1 text-sm">
                       <option value="en">English</option>
                       <option value="bn">বাংলা</option>
                     </select>
