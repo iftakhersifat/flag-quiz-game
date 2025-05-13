@@ -139,10 +139,10 @@ useEffect(() => {
 
   setSelected(country);
   const isCorrect = country.cca3 === question.correct.cca3;
-  const gotBonus = isCorrect && timeLeft >= 6;  // Bonus points if correct and timeLeft >= 6
-  const basePoints = isCorrect ? 1 : 0;  // 1 point for correct answer
-  const bonusPoints = gotBonus ? 2 : 0;  // 2 bonus points if timeLeft >= 6
-  const totalPoints = basePoints + bonusPoints;  // Add base and bonus points
+  const gotBonus = isCorrect && timeLeft >= 6;
+  const basePoints = isCorrect ? 1 : 0;
+  const bonusPoints = gotBonus ? 2 : 0;
+  const totalPoints = basePoints + bonusPoints;
 
   setHistory(prev => [...prev, {
     flag: question.correct.flags.png,
@@ -175,50 +175,79 @@ useEffect(() => {
     }
   } else {
     if (isCorrect) {
-  correctSound.play();
-  setCorrectCount(prev => prev + 1);
-  setCurrentStreak(prev => {
-    const newStreak = prev + 1;
+      correctSound.play();
 
-    if (newStreak === 20 && !achievements.includes("Streak Master")) {
-      setAchievements(prev => [...prev, "Streak Master"]);
-      toast.success("🏅 Achievement Unlocked: Streak Master!");
-    }
+      const newCorrect = correctCount + 1;
+      const newStreak = currentStreak + 1;
+      const newBonus = gotBonus ? bonusCount + 1 : bonusCount;
 
-    return newStreak;
-  });
+      // ✅ Milestone achievements
+      const milestones = {
+        5: "First 5",
+        10: "Rising Challenger",
+        20: "Trivia Master",
+        30: "Knowledge Seeker",
+        40: "Half Century",
+        50: "Brain Powerhouse",
+        60: "Brainstormer",
+        70: "Flag Hero",
+        80: "Master of Flags",
+        90: "Flag Veteran",
+        100: "Flag Legend"
+      };
 
-  if (gotBonus) {
-    setBonusCount(prev => {
-      const newBonus = prev + 1;
+      const unlocked = [];
 
-      if (newBonus === 10 && !achievements.includes("Fast Thinker")) {
-        setAchievements(prev => [...prev, "Fast Thinker"]);
-        toast.success("⚡ Achievement Unlocked: Fast Thinker!");
+      // Correct count-based achievements
+      if (milestones[newCorrect] && !achievements.includes(milestones[newCorrect])) {
+        unlocked.push(milestones[newCorrect]);
       }
 
-      return newBonus;
-    });
-  }
+      // Streak-based achievement
+      if (newStreak === 20 && !achievements.includes("Streak Master")) {
+        unlocked.push("Streak Master");
+      }
 
-  toast.success(`✅ Correct! You got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`, {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: true,
-    theme: "colored"
-  });
-} else {
-  wrongSound.play();
-  setWrongCount(prev => prev + 1);
-  setCurrentStreak(0);
-  toast.error("❌ Wrong answer!", {
-    position: "top-right",
-    autoClose: 2000,
-    hideProgressBar: true,
-    theme: "dark"
-  });
-}
+      // Bonus-based achievement
+      if (gotBonus && newBonus === 5 && !achievements.includes("Fast Thinker")) {
+        unlocked.push("Fast Thinker");
+      }
 
+      // ✅ Show achievement toast(s)
+      if (unlocked.length > 0) {
+        setAchievements(prev => [...prev, ...unlocked]);
+        unlocked.forEach(name => {
+          toast.success(`🏅 Achievement Unlocked: ${name}!`, {
+            position: "top-right",
+            autoClose: 3000,
+            hideProgressBar: false,
+            theme: "colored"
+          });
+        });
+      }
+
+      // Update scores/streaks
+      setCorrectCount(newCorrect);
+      setCurrentStreak(newStreak);
+      if (gotBonus) setBonusCount(newBonus);
+
+      toast.success(`✅ Correct! You got ${totalPoints} points!${gotBonus ? " ⭐ Bonus!" : ""}`, {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        theme: "colored"
+      });
+    } else {
+      wrongSound.play();
+      setWrongCount(prev => prev + 1);
+      setCurrentStreak(0);
+      toast.error("❌ Wrong answer!", {
+        position: "top-right",
+        autoClose: 2000,
+        hideProgressBar: true,
+        theme: "dark"
+      });
+    }
   }
 
   // Add to review data
@@ -233,6 +262,8 @@ useEffect(() => {
     }
   ]);
 };
+
+
 
 
 
