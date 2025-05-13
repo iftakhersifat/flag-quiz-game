@@ -69,11 +69,27 @@ Play now:
 
 ## 🏅 Achievements & Badges
 
-- **Streak Master**: Answer 20 questions correctly in a row.
-- **Fast Thinker**: Earn bonus 10 times by answering quickly.
-- More badges coming soon!
+### ✅ Score-Based Achievements
+- **First 5** – Answer 5 questions correctly  
+- **Rising Challenger** – Answer 10 questions correctly  
+- **Trivia Master** – Answer 20 questions correctly  
+- **Knowledge Seeker** – Answer 30 questions correctly  
+- **Half Century** – Answer 40 questions correctly  
+- **Brain Powerhouse** – Answer 50 questions correctly  
+- **Brainstormer** – Answer 60 questions correctly  
+- **Flag Hero** – Answer 70 questions correctly  
+- **Master of Flags** – Answer 80 questions correctly  
+- **Flag Veteran** – Answer 90 questions correctly  
+- **Flag Legend** – Answer 100 questions correctly  
+
+### 🔥 Special Achievements
+- **Streak Master** – Answer 20 questions correctly in a row  
+- **Fast Thinker** – Earn bonus 5 times by answering quickly  
 
 ---
+
+🏗️ *More badges coming soon! Stay tuned!*
+
 
 ## 🛣️ Roadmap
 
