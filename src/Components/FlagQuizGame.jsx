@@ -60,13 +60,25 @@ const [bonusCount, setBonusCount] = useState(0);
   const wrongSound = new Audio('/assets/sounds/buzzer-or-wrong-answer-20582.mp3');
 
   useEffect(() => {
-    fetch("https://restcountries.com/v3.1/all")
-      .then(res => res.json())
-      .then(data => {
+
+
+  fetch(`https://restcountries.com/v3.1/all?fields=name,flags,cca3`)
+    .then(res => res.json())
+    .then(data => {
+      if (Array.isArray(data)) {
         const valid = data.filter(c => c.flags?.png && c.name?.common);
         setCountries(valid);
-      });
-  }, []);
+      } else {
+        console.error("Not an array:", data);
+        setCountries([]);
+      }
+    })
+    .catch(error => {
+      console.error("Fetch error:", error);
+      setCountries([]);
+    });
+}, []);
+
 
   useEffect(() => {
     const saved = JSON.parse(localStorage.getItem("leaderboard")) || [];
@@ -376,33 +388,56 @@ const saveScore = () => {
             <div className={`h-full transition-all duration-500 ${timeLeft <= 3 ? "bg-red-500" : "bg-amber-500"}`} style={{ width: `${(timeLeft / 10) * 100}%` }}></div>
           </div>
 
-          {question && (
-            <>
-              <div className={`mb-6 transition-transform duration-500 ${selected ? "animate__animated animate__flipInY" : ""}`}>
-                <img src={question.correct.flags.png} alt="Country Flag" className="w-[500px] h-auto mx-auto rounded-2xl shadow object-contain" />
-              </div>
-              <label className="flex items-center gap-2 mb-6 justify-center">
-                <input type="checkbox" checked={isTTSOn} onChange={(e) => setIsTTSOn(e.target.checked)} />
-                🔊 {t("enable_tts")}
-              </label>
-              <div className="grid grid-cols-2 gap-4 mb-6">
-                {question.options.map((country) => (
-                  <button key={country.cca3} onClick={() => handleAnswer(country)} disabled={!!selected} className={`border-1 border-amber-200 rounded-2xl py-2 px-4 transition-all duration-300 ${selected ? (country.cca3 === question.correct.cca3 ? "bg-green-500 text-white animate__animated animate__bounce" : country.cca3 === selected.cca3 ? "bg-red-200" : "bg-gray-200") : "bg-white"}`}>
-                    {country.name.common}
-                  </button>
-                ))}
-              </div>
-              {selected && (
-                <div className="mb-4 text-lg">
-                  {selected.cca3 === question.correct.cca3 ? (
-                    <span className="text-green-600 font-semibold">{t("correct_answer")}</span>
-                  ) : (
-                    <span className="text-red-600 font-semibold">Incorrect! It was {question.correct.name.common}.</span>
-                  )}
-                </div>
-              )}
-            </>
-          )}
+          {question && question.correct?.flags?.png && (
+  <>
+    <div className={`mb-6 transition-transform duration-500 ${selected ? "animate__animated animate__flipInY" : ""}`}>
+      <img
+        src={question.correct.flags.png}
+        alt="Country Flag"
+        className="w-[500px] h-auto mx-auto rounded-2xl shadow object-contain"
+      />
+    </div>
+
+    <label className="flex items-center gap-2 mb-6 justify-center">
+      <input type="checkbox" checked={isTTSOn} onChange={(e) => setIsTTSOn(e.target.checked)} />
+      🔊 {t("enable_tts")}
+    </label>
+
+    <div className="grid grid-cols-2 gap-4 mb-6">
+      {question.options.map((country) => (
+        <button
+          key={country.cca3}
+          onClick={() => handleAnswer(country)}
+          disabled={!!selected}
+          className={`border-1 border-amber-200 rounded-2xl py-2 px-4 transition-all duration-300 ${
+            selected
+              ? country.cca3 === question.correct.cca3
+                ? "bg-green-500 text-white animate__animated animate__bounce"
+                : country.cca3 === selected.cca3
+                ? "bg-red-200"
+                : "bg-gray-200"
+              : "bg-white"
+          }`}
+        >
+          {country.name.common}
+        </button>
+      ))}
+    </div>
+
+    {selected && (
+      <div className="mb-4 text-lg">
+        {selected.cca3 === question.correct.cca3 ? (
+          <span className="text-green-600 font-semibold">{t("correct_answer")}</span>
+        ) : (
+          <span className="text-red-600 font-semibold">
+            Incorrect! It was {question.correct.name.common}.
+          </span>
+        )}
+      </div>
+    )}
+  </>
+)}  
+
 
           <div className="flex justify-center gap-4 mt-4">
             <button className="border px-5 py-2 rounded-xl bg-amber-500 text-white" onClick={generateQuestion}>{t("next")}</button>
